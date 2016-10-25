@@ -10,9 +10,9 @@ public class Player extends Creature {
     private static final float JUMP_SPEED = -.95f;
 
     private boolean onGround;
-    private int maxhealth = 40;
-    private int health;
-    private int minhealth = 1;
+    public int maxhealth = 40;
+    public int health;
+    public int minhealth = 1;
     
 
     public Player(Animation left, Animation right,
@@ -26,15 +26,15 @@ public class Player extends Creature {
     	this.health -= 5;
     }
     
-    public void healthMove() {
+    public void moveHealth(float dx){
     	if (this.health < maxhealth){
-    		this.health += 1;
+    		health += (int) this.getWidth() * dx; // distance
     	}
     }
     
-    public void healthRest() {
+    public void restHealth(long dt){
     	if (this.health < maxhealth){
-    		this.health += 5;
+    		health += (int) 5 * dt / 1000; // time
     	}
     }
     
@@ -48,6 +48,9 @@ public class Player extends Creature {
     	if (this.health < minhealth){
     		this.setState(Creature.STATE_DYING);
     	}
+    }
+    public int getHealth(){
+    	return this.health;
     }
 
     public void collideHorizontal() {

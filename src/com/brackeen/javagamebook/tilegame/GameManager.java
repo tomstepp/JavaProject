@@ -46,6 +46,13 @@ public class GameManager extends GameCore {
     private GameAction jump;
     private GameAction exit;
     private GameAction shoot;
+    
+    // My variables
+    private float prevX = 0;
+    private float deltaX = 0;
+    
+    private long prevT = 0;
+    private long deltaT = 0;
 
 
     public void init() {
@@ -129,7 +136,7 @@ public class GameManager extends GameCore {
             }
             if (shoot.isPressed()) {
             	//create lazer beam :)
-            	Bullet bullet  = (Bullet) resourceManager.bulletSprite.clone();
+            	Sprite bullet  = (Sprite) resourceManager.bulletSprite.clone();
             	bullet.setX(player.getX());
             	bullet.setY(player.getY());
             	bullet.setVelocityX(2);
@@ -268,8 +275,22 @@ public class GameManager extends GameCore {
         in the current map.
     */
     public void update(long elapsedTime) {
-        Creature player = (Creature)map.getPlayer();
-
+        //Creature player = (Creature)map.getPlayer();
+        Player player = (Player) map.getPlayer();
+        
+        // player health
+        player.checkHealth();
+        deltaX = Math.abs(player.getX() - prevX);
+        deltaT = elapsedTime - prevT;
+        if (deltaX > player.getWidth()){
+        	player.moveHealth(deltaX);
+        	prevX = 0;
+        }
+        else if (deltaT > 1000){
+        	player.restHealth(deltaT);
+        	prevT = 0;
+        }
+     
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
             map = resourceManager.reloadMap();
