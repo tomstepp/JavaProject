@@ -48,7 +48,7 @@ public class GameManager extends GameCore {
     private GameAction shoot;
     
     // My variables
-    private float prevX = 0;
+    private float prevX = -1;
     private float deltaX = 0;
     
     private long prevT = 0;
@@ -277,22 +277,27 @@ public class GameManager extends GameCore {
     public void update(long elapsedTime) {
         //Creature player = (Creature)map.getPlayer();
         Player player = (Player) map.getPlayer();
+        if (prevX == -1){
+        	prevX = player.getX();
+        }
         
         // player health
         player.checkHealth();
         deltaX = Math.abs(player.getX() - prevX);
-        deltaT = elapsedTime - prevT;
+        deltaT += elapsedTime;
         if (deltaX > player.getWidth()){
-        	player.moveHealth(deltaX);
-        	prevX = 0;
+        	player.boostHealth(1);
+        	prevX = player.getX();
+        	deltaT = 0;
         }
-        else if (deltaT > 1000){
-        	player.restHealth(deltaT);
-        	prevT = 0;
+        //System.out.println("Time: " + elapsedTime + "  dT: " + deltaT);
+        if (deltaT > 1000 && deltaX < player.getWidth()){
+        	player.boostHealth(5);
+        	deltaT = 0;
         }
      
         // player is dead! start map over
-        if (player.getState() == Creature.STATE_DEAD) {
+        if (player.getState() == Creature.STATE_DYING) {
             map = resourceManager.reloadMap();
             return;
         }

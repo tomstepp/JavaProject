@@ -2,6 +2,7 @@ package com.brackeen.javagamebook.tilegame;
 
 import java.awt.*;
 import java.util.Iterator;
+import com.brackeen.javagamebook.tilegame.sprites.Player;
 
 import com.brackeen.javagamebook.graphics.Sprite;
 import com.brackeen.javagamebook.tilegame.sprites.Creature;
@@ -78,7 +79,7 @@ public class TileMapRenderer {
     public void draw(Graphics2D g, TileMap map,
         int screenWidth, int screenHeight)
     {
-        Sprite player = map.getPlayer();
+        Player player = (Player) map.getPlayer();
         int mapWidth = tilesToPixels(map.getWidth());
 
         // get the scrolling position of the map
@@ -147,6 +148,17 @@ public class TileMapRenderer {
                 ((Creature)sprite).wakeUp();
             }
         }
+        
+        
+        // My Display
+        //drawImage(img, dx, dy, ...)
+        g.drawImage(null, 100, 10, null);
+        g.setColor(Color.WHITE);
+        //drawString
+        //g.drawString("Player Health: " + Integer.toString(player.getHealth()), 70, 100);
+        g.drawString("Player Health: " + player.getHealth(), 70, 100);
+
+        
     }
 
 }
